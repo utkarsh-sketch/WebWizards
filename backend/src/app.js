@@ -11,10 +11,18 @@ import { errorHandler, notFound } from './middleware/error.js';
 export function createApp() {
   const app = express();
   const allowedOrigins = new Set(env.clientOrigins);
+  const isDev = process.env.NODE_ENV !== 'production';
+
+  function isAllowedOrigin(origin) {
+    if (!origin) return true;
+    if (allowedOrigins.has(origin)) return true;
+    if (!isDev) return false;
+    return /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+  }
 
   const corsOptions = {
     origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }

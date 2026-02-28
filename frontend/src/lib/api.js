@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_BASE = import.meta.env.VITE_API_URL;
+
+if (!API_BASE) {
+  throw new Error("VITE_API_URL is not defined");
+}
 
 async function request(path, { method = 'GET', token, body } = {}) {
   const response = await fetch(`${API_BASE}${path}`, {

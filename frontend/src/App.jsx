@@ -114,7 +114,12 @@ export default function App() {
       return undefined;
     }
 
-    const wsUrl = import.meta.env.VITE_WS_URL || 'http://localhost:5001';
+    const wsUrl = import.meta.env.VITE_API_URL;
+
+    if (!wsUrl) {
+      console.error("VITE_API_URL is not defined");
+      return;
+    }
     const socket = io(wsUrl, {
       transports: ['websocket', 'polling'],
       auth: { token: `Bearer ${auth.token}` },
